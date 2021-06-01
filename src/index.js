@@ -1,17 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React,{Suspense}  from 'react'
+import {BrowserRouter, Switch, Route} from "react-router-dom";
+import ReactDom from 'react-dom'
+import "./style.css"
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import Home from './Index.jsx'
+import Login from './Login.jsx'
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const App = () => {
+  return <Suspense fallback={< div > loading ...</div>}>
+    <BrowserRouter>
+      <Switch>
+        <Route path='/' exact component={Login}/>
+        <Route path='/home' component={Home}/>
+      </Switch>
+    </BrowserRouter>
+  </Suspense>
+}
+
+ReactDom.render(
+  <App/>, document.getElementById('root'))
