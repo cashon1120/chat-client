@@ -23,7 +23,7 @@ const Login = (props) => {
     })
   }
 
-  return <div className="loginWrapper" style={{width: 400,borderRadius: 5, background: '#f8f8f8', padding: 25, margin: 'auto', boxShadow: '0 0 15px rgba(0,0,0, .1)', marginTop:30, border: '1px solid #e1e1e1'}}>
+  return <div className="loginWrapper" style={{borderRadius: 5, background: '#f8f8f8', padding: 25, margin: 'auto', boxShadow: '0 0 15px rgba(0,0,0, .1)', marginTop:30, border: '1px solid #e1e1e1'}}>
     <h2 style={{textAlign: 'center', marginBottom: 15}}>这不是一个聊天室</h2>
     <Form
       {...layout}

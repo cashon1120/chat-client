@@ -1,7 +1,7 @@
 import React,{useState, useRef} from 'react'
 import {Form, Input, Button, Popover } from 'antd';
 import {TeamOutlined} from '@ant-design/icons';
-import websocket from './ws'
+import MyWebsocket from './ws'
 
 const layout = {
   labelCol: {
@@ -11,7 +11,11 @@ const layout = {
     span: 24
   }
 };
+const localUsername = localStorage.getItem('username')
 let socket = null
+if(localUsername){
+  socket = new MyWebsocket(`username=${localUsername}`)
+}
 
 const getHistoryMsg = () => {
   let list = localStorage.getItem('messagelist')
@@ -23,9 +27,8 @@ const getHistoryMsg = () => {
 
 const msgList = getHistoryMsg()
 const Home = (props) => {
-  const [onlineList, setOnlineList] = useState(msgList)
+  const [onlineList, setOnlineList] = useState([])
   const [newmsg, setNewmsg] = useState(getHistoryMsg())
-  const myName = localStorage.getItem('username')
   const formRef = useRef()
   const onFinish = (values) => {
     formRef.current.setFieldsValue({
@@ -34,22 +37,21 @@ const Home = (props) => {
     socket.send({
       type: 'chat',
       params: {
-        username: myName,
+        username: localUsername,
         ...values
       }
     })
   }
 
   useState(() => {
-    const username = localStorage.getItem('username')
-    if(!username){
+    if(!localUsername){
       props.history.push('/')
     }else{
-      if(socket){
+      if(socket.close){
         socket.close()
-        return
       }
-      socket = new websocket(`username=${username}`)
+
+      socket.create()
       socket.onmessage((res) => {
         switch (res.type) {
           case 'chat':
@@ -66,16 +68,15 @@ const Home = (props) => {
           default:
             break;
         }
-        
       })  
     }
   }, [])
 
-  const showOnlineList = list => list.map(item => <div>{item}</div>)
+  const showOnlineList = list => list.map(item => <div key={item}>{item}</div>)
 
   return <div className="wrapper">
   <ul className="messageList" id="messageContainer">
-    {newmsg.map(item => <li key={item.id} className={item.username === myName ? 'myMessage' : ''}>
+    {newmsg.map(item => <li key={item.id} className={item.username === localUsername ? 'myMessage' : ''}>
       <div className="userName">{item.username}</div>
       <div>
         <div className="message">{item.message}</div> 
