@@ -1,11 +1,24 @@
+/***登录***/
 .loginWrapper{
   position: fixed;
   top: 40%;
   left: 50%;
   width: 90%;
   max-width: 400px;
+  background: #f8f8f8;
+  border-radius: 5px;
+  padding: 25px 25px 15px 25px;
+  margin: auto;
+  box-shadow: 0 0 15px rgba(0,0,0, .1);
+  margin-top: 30px;
+  border: 1px solid #e1e1e1;
   transform: translate(-50%, -50%);
 }
+.registerContainer{
+  text-align: right;
+  padding-top: 15px;
+}
+/***注册***/
 .wrapper{
   width: 95%;
   height: 95%;
@@ -87,4 +100,16 @@ ul.messageList li{
   background: #eee;
   border-radius: 3px;
   padding: 2px 5px;
+}
+
+.messageInput{
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  height: 85px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  outline: none;
+  overflow: auto;
+  border-radius: 5px;
 }

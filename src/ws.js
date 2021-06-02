@@ -18,7 +18,7 @@ class MyWebsocket {
     this.socket.onmessage = res => {
       const data = JSON.parse(res.data)
       if(data.type === 'heart'){
-        console.log('清除关闭')
+
         clearTimeout(this.serverTimer)
       }else{
         this.pushMessage(data)
@@ -33,14 +33,16 @@ class MyWebsocket {
     this.heartTimer = setInterval(() => {
       this.serverTimer = setTimeout(() => {
         this.close()
+        this.create()
       }, 5000);
       this.send({
         type: 'heart'
       })
-    }, 6000);
+    }, 60000);
   }
 
   send(msg){
+    if(!this.socket) return
     this.socket.send(JSON.stringify(msg))
   }
 

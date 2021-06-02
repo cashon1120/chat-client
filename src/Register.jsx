@@ -5,19 +5,24 @@ import request from './utils/axios'
 
 const layout = {
   labelCol: {
-    span: 4
+    span: 6
   },
   wrapperCol: {
-    span: 20
+    span: 18
   }
 };
 
-const Login = (props) => {
+const Register = (props) => {
   const onFinish = (values) => {
-    request.post('/login', values).then(res => {
+    if(values.password !== values.repassword){
+      message.error('两次密码输入不一致, 请核对')
+      return
+    }
+    request.post('/register', values).then(res => {
+      console.log(res)
       if(res && res.code === 0){
-        localStorage.setItem('username', values.username)
-        props.history.push('/home')
+        message.success('注册成功, 请登录')
+        props.history.push('/')
       }else{
         message.error(res.msg)
       }
@@ -25,7 +30,7 @@ const Login = (props) => {
   }
 
   return <div className="loginWrapper">
-    <h2 style={{textAlign: 'center', marginBottom: 25}}>这不是一个聊天室</h2>
+    <h2 style={{textAlign: 'center', marginBottom: 25}}>欢迎注册这个聊天室</h2>
     <Form
       {...layout}
       name="basic"
@@ -54,12 +59,23 @@ const Login = (props) => {
         <Input.Password/>
       </Form.Item>
 
+      <Form.Item
+        label="确认密码"
+        name="repassword"
+        rules={[{
+          required: true,
+          message: '请再输入一次密码!'
+        }
+      ]}>
+        <Input.Password/>
+      </Form.Item>
+
       <Button type="primary" htmlType="submit" style={{width: '100%'}}>
-          登录
+          注册
       </Button>
     </Form>
-    <div className="registerContainer">没有账号? <Link to="register">注册一个</Link></div>
+    <div className="registerContainer">已有账号? <Link to="/">登录</Link></div>
   </div>
 }
 
-export default Login
+export default Register
