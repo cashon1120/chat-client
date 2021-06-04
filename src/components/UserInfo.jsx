@@ -31,7 +31,7 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 
-const UserInfo = () => {
+const UserInfo = (props) => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
@@ -52,6 +52,8 @@ const UserInfo = () => {
       if(res && res.code === 0){
         message.success('修改成功')
         setUserInfo(res.userInfo)
+        props.saveUserList([res.userInfo])
+        setVisible(false)
       }else{
         message.error(res.msg)
       }

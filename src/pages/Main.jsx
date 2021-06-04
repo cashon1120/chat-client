@@ -58,11 +58,15 @@ const Main = (props) => {
   }
 
   const saveUserList = (list) => {
+    console.log(list)
+    console.log(localStorage.getItem('userList'))
     const localUserList = localStorage.getItem('userList') ? JSON.parse(localStorage.getItem('userList')) : {}
     list.forEach(item => {
       localUserList[item.userName] = item
     })
     localStorage.setItem('userList', JSON.stringify(localUserList))
+    console.log(localStorage.getItem('userList'))
+
   }
 
   useState(() => {
@@ -138,7 +142,9 @@ const Main = (props) => {
       ({userInfo}) => <div className="wrapper">
       <ul className="messageList" id="messageContainer">
         {newmsg.map(item => <li key={item.id} className={item.userName === userInfo.userName ? 'myMessage' : ''}>
-          <div className="userAvatar">{<img src={staticURL + findUserAvatar(item.userName)} alt={item.nickName}/>}</div>
+          <div className="userAvatar">{<img 
+            src={findUserAvatar(item.userName) ? staticURL + findUserAvatar(item.userName) : '/avatar.jpg'} alt={item.nickName}
+          />}</div>
           <div>
             <div className="message" dangerouslySetInnerHTML={{__html: item.message}}></div> 
           </div>
@@ -155,7 +161,7 @@ const Main = (props) => {
           <div className="btnWrapper">
             <div className="bottomBtns">
               <div title="修改资料">
-                <UserInfo />
+                <UserInfo saveUserList={saveUserList}/>
               </div>
             </div>
             <Popover content={showOnlineList(onlineList)} title="在线用户" trigger="hover">

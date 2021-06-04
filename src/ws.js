@@ -1,10 +1,4 @@
-let wsUrl = '';
-console.log(process.env.NODE_ENV)
-if (process.env.NODE_ENV === 'production') {
-  wsUrl = '120.48.9.247:3005/';
-} else {
-  wsUrl = '192.168.50.12:3005/';
-}
+import {wsUrl} from './conf'
 class MyWebsocket {
   constructor(url){
     this.socketUrl = `ws:${wsUrl}?${url}`
