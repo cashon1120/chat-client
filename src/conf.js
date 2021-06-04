@@ -1,0 +1,1 @@
+export const staticURL = 'http://localhost:3005/'

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form, Input, Button, message} from 'antd';
 import {Link} from 'react-router-dom'
-import request from './utils/axios'
+import request from '../utils/axios'
 
 const layout = {
   labelCol: {
@@ -19,7 +19,6 @@ const Register = (props) => {
       return
     }
     request.post('/register', values).then(res => {
-      console.log(res)
       if(res && res.code === 0){
         message.success('注册成功, 请登录')
         props.history.push('/')
@@ -39,10 +38,21 @@ const Register = (props) => {
     >
       <Form.Item
         label="账号"
-        name="username"
+        name="userName"
         rules={[{
           required: true,
           message: '请输入账号!'
+        }
+      ]}>
+        <Input/>
+      </Form.Item>
+
+      <Form.Item
+        label="昵称"
+        name="nickName"
+        rules={[{
+          required: true,
+          message: '请输入昵称!'
         }
       ]}>
         <Input/>
