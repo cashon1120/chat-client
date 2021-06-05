@@ -16,7 +16,7 @@ request.interceptors.response.use((response) => {
     if (response.status === 200) {
       if(response.data.code === -1){
         message.error(response.data.msg)
-        window.location.href = '/'
+        window.history.push('/')
         return
       }
       if (response.data.code === 0) {

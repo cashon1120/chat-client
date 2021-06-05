@@ -1,11 +1,12 @@
 import React,{useState} from 'react'
 import {message, Button, Popover } from 'antd';
-import {TeamOutlined} from '@ant-design/icons';
+import {TeamOutlined, FolderOutlined} from '@ant-design/icons';
 import {Consumer} from '../context'
 import UserInfo from '../components/userInfo/Index'
 import Emoji from '../components/emoji/Index'
+import UploadImg from '../components/uploadImg/Index'
 import MyWebsocket from '../ws'
-import {getLocalUserInfo} from '../utils/common'
+import {getLocalUserInfo, formatFileName} from '../utils/common'
 import {staticURL} from '../conf'
 
 // 获取本地消息记录
@@ -96,6 +97,7 @@ const Main = (props) => {
           case 'online':
             saveUserList(res.list)
             setOnlineList(res.list)
+            message.info(`${res.nickName} 进入房间`)
             break;
 
           default:
@@ -136,20 +138,6 @@ const Main = (props) => {
   }
   // 键盘事件----------------end
 
-
-  // 发送表情
-  const sendEmoji = (id) => {
-    const localUserInfo = getLocalUserInfo()
-    socket.send({
-      type: 'chat',
-      params: {
-        userName: localUserInfo.userName,
-        type: 'emoji',
-        emojid: id
-      }
-    })
-  }
-
   return <Consumer>{
       ({userInfo}) => <div className="wrapper">
       <ul className="messageList" id="messageContainer">
@@ -160,13 +148,23 @@ const Main = (props) => {
           <div>
             {item.type === 'text' ? <div className="message" dangerouslySetInnerHTML={{__html: item.message}}></div> : null}
             {item.type === 'emoji' ? <div className="message message-emoji"><img src={`/assets/emoji/streamline-${item.emojid}--office-zoo--140x140.png`} alt=""/></div> : null}
+            {item.type === 'file' ? <div className="message message-file">
+              <a download={`${item.path}`} title="下载文件" href={`${staticURL}${item.path}`}>
+                <FolderOutlined style={{fontSize: 38, opacity: .6}} />
+                <div className="message-file-info">
+                  <div>文件类型: {formatFileName(item.path)}</div>
+                  <span>下载文件</span>
+                </div>
+              </a>
+            </div> : null}
           </div>
         </li>)}
       </ul>
 
       <div className="formContainer">
         <div className="tools">
-          <div><Emoji sendEmoji={sendEmoji}/></div>
+          <div title="表情"><Emoji socket={socket}/></div>
+          <div title="发送文件"><UploadImg socket={socket} /></div>
         </div>
 
         <div 
@@ -184,7 +182,7 @@ const Main = (props) => {
           </div>
           <Popover content={showOnlineList(onlineList)} title="在线用户" trigger="hover">
             <div className="status">
-              <TeamOutlined /> {onlineList.length}
+              <TeamOutlined className="icon" /> {onlineList.length}
             </div>
           </Popover>
           <Button type="primary" onClick={onFinish}>

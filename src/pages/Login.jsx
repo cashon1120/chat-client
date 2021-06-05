@@ -19,6 +19,7 @@ const Login = (props) => {
     request.post('/login', values).then(res => {
       if(res && res.code === 0){
         setUserInfo(res.userInfo)
+        window.history.push = props.history.push
         setTimeout(() => {
           props.history.push('/main')
         }, 500);

@@ -5,3 +5,10 @@ export const getLocalUserInfo = () => {
   }
   return null
 }
+
+export const formatFileName = (fileName) => {
+  console.log(fileName)
+  const temp = fileName.split('.')
+  const exetName = temp[temp.length-1]
+  return exetName
+}

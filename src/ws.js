@@ -12,7 +12,6 @@ class MyWebsocket {
     this.socket.onmessage = res => {
       const data = JSON.parse(res.data)
       if(data.type === 'heart'){
-
         clearTimeout(this.serverTimer)
       }else{
         this.pushMessage(data)

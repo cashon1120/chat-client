@@ -1,11 +1,15 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {SmileOutlined} from '@ant-design/icons';
+import {getLocalUserInfo} from '../../utils/common'
 import './style.css'
 
 const emojis = ['002', '008', '009', '010', '012', '014','015','016','018','023','029','037','039','042','046','048','050','051','054','058','062','064','067','083','091','093','094','107','108','109']
 
 
 const Emoji = (props) => {
+
+  const [visible, setVisible] = useState(false)
+
   const threshold = [0.01] // 这是触发时机 0.01代表出现 1%的面积出现在可视区触发一次回掉函数 threshold = [0, 0.25, 0.5, 0.75]  表示分别在0% 25% 50% 75% 时触发回掉函数
 
   // 利用 IntersectionObserver 监听元素是否出现在视口
@@ -20,15 +24,40 @@ const Emoji = (props) => {
   });
 
   const onload = (e)=>{
-    console.log(e.target)
     io.observe(e.target) // 添加需要被观察的元素。
   }
 
+  useState(() => {
+    document.body.addEventListener('click', () => {
+      setVisible(false)
+    })
+  }, [])
+
+  const handleShowVisible = (e) => {
+    e.stopPropagation()
+    setVisible(!visible)
+  }
+
+  const sendEmoji = (id) => {
+    const localUserInfo = getLocalUserInfo()
+    props.socket.send({
+      type: 'chat',
+      params: {
+        userName: localUserInfo.userName,
+        type: 'emoji',
+        emojid: id
+      }
+    })
+  }
+
+
   return <div className="emoji">
-    <SmileOutlined />
-    <div className="emoji-container">
+    <div onClick={handleShowVisible} style={{width: 30, height: 30}}>
+      <SmileOutlined className="icon" />
+    </div>
+    <div className="emoji-container" style={{display: visible ? 'block' : 'none'}}>
       <ul>
-        {emojis.map(item => <li key={item} onClick={() => props.sendEmoji(item)}><img data-src={`/assets/emoji/streamline-${item}--office-zoo--140x140.png`} onLoad={onload} src="/avatar.jpg" alt="" /></li>)}
+        {emojis.map(item => <li key={item} onClick={() => sendEmoji(item)}><img data-src={`/assets/emoji/streamline-${item}--office-zoo--140x140.png`} onLoad={onload} src="/avatar.jpg" alt="" /></li>)}
       </ul>
     </div>
   </div>

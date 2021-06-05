@@ -19,17 +19,18 @@ function getBase64(img, callback) {
   reader.readAsDataURL(img);
 }
 
-function beforeUpload(file) {
+const beforeUpload = (file) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
+    message.error('只能上传 JPG/PNG 格式的文件!');
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
+    message.error('文件大小不能超过 2MB!');
   }
   return isJpgOrPng && isLt2M;
 }
+
 
 const UserInfo = (props) => {
   const [visible, setVisible] = useState(false)
@@ -90,7 +91,7 @@ const UserInfo = (props) => {
   return <Consumer>
     {
       ({userInfo, setUserInfo}) => <>
-        <UserOutlined onClick={() => setVisible(true)} />
+        <UserOutlined onClick={() => setVisible(true)}  className="icon" />
             <Modal title="修改信息" visible={visible} onCancel={() => setVisible(false)} onOk={() => {
               handleFinish(setUserInfo)
             }}>
