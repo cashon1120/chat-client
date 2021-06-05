@@ -2,7 +2,8 @@ import React,{useState} from 'react'
 import {message, Button, Popover } from 'antd';
 import {TeamOutlined} from '@ant-design/icons';
 import {Consumer} from '../context'
-import UserInfo from '../components/UserInfo'
+import UserInfo from '../components/userInfo/Index'
+import Emoji from '../components/emoji/Index'
 import MyWebsocket from '../ws'
 import {getLocalUserInfo} from '../utils/common'
 import {staticURL} from '../conf'
@@ -46,6 +47,7 @@ const Main = (props) => {
       type: 'chat',
       params: {
         userName: localUserInfo.userName,
+        type: 'text',
         message: msg
       }
     })
@@ -58,15 +60,11 @@ const Main = (props) => {
   }
 
   const saveUserList = (list) => {
-    console.log(list)
-    console.log(localStorage.getItem('userList'))
     const localUserList = localStorage.getItem('userList') ? JSON.parse(localStorage.getItem('userList')) : {}
     list.forEach(item => {
       localUserList[item.userName] = item
     })
     localStorage.setItem('userList', JSON.stringify(localUserList))
-    console.log(localStorage.getItem('userList'))
-
   }
 
   useState(() => {
@@ -112,7 +110,7 @@ const Main = (props) => {
       if(div){
         div.scrollTop = div.scrollHeight;
       }
-    }, 100);
+    }, 500);
   }, [])
 
   // 在线用户列表
@@ -138,6 +136,20 @@ const Main = (props) => {
   }
   // 键盘事件----------------end
 
+
+  // 发送表情
+  const sendEmoji = (id) => {
+    const localUserInfo = getLocalUserInfo()
+    socket.send({
+      type: 'chat',
+      params: {
+        userName: localUserInfo.userName,
+        type: 'emoji',
+        emojid: id
+      }
+    })
+  }
+
   return <Consumer>{
       ({userInfo}) => <div className="wrapper">
       <ul className="messageList" id="messageContainer">
@@ -146,35 +158,41 @@ const Main = (props) => {
             src={findUserAvatar(item.userName) ? staticURL + findUserAvatar(item.userName) : '/avatar.jpg'} alt={item.nickName}
           />}</div>
           <div>
-            <div className="message" dangerouslySetInnerHTML={{__html: item.message}}></div> 
+            {item.type === 'text' ? <div className="message" dangerouslySetInnerHTML={{__html: item.message}}></div> : null}
+            {item.type === 'emoji' ? <div className="message message-emoji"><img src={`/assets/emoji/streamline-${item.emojid}--office-zoo--140x140.png`} alt=""/></div> : null}
           </div>
         </li>)}
       </ul>
+
       <div className="formContainer">
-          <div 
-            id="messageInput" 
-            className="messageInput"
-            contentEditable={true}
-            onKeyDown={handleKeyDown}
-            onKeyUp={handleKeyUp}
-            ></div>
-          <div className="btnWrapper">
-            <div className="bottomBtns">
-              <div title="修改资料">
-                <UserInfo saveUserList={saveUserList}/>
-              </div>
+        <div className="tools">
+          <div><Emoji sendEmoji={sendEmoji}/></div>
+        </div>
+
+        <div 
+          id="messageInput" 
+          className="messageInput"
+          contentEditable={true}
+          onKeyDown={handleKeyDown}
+          onKeyUp={handleKeyUp}
+          ></div>
+        <div className="btnWrapper">
+          <div className="bottomBtns">
+            <div title="修改资料">
+              <UserInfo saveUserList={saveUserList}/>
             </div>
-            <Popover content={showOnlineList(onlineList)} title="在线用户" trigger="hover">
-              <div className="status">
-                <TeamOutlined /> {onlineList.length}
-              </div>
-            </Popover>
-            <Button type="primary" onClick={onFinish}>
-              提交
-            </Button>
           </div>
+          <Popover content={showOnlineList(onlineList)} title="在线用户" trigger="hover">
+            <div className="status">
+              <TeamOutlined /> {onlineList.length}
+            </div>
+          </Popover>
+          <Button type="primary" onClick={onFinish}>
+            提交
+          </Button>
         </div>
       </div>
+    </div>
     }
   </Consumer>
 }

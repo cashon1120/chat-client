@@ -14,6 +14,11 @@ request.interceptors.response.use((response) => {
 
   return new Promise((resolve) => {
     if (response.status === 200) {
+      if(response.data.code === -1){
+        message.error(response.data.msg)
+        window.location.href = '/'
+        return
+      }
       if (response.data.code === 0) {
         resolve(response.data)
         return

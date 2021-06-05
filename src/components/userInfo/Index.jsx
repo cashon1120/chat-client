@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {Modal, Form, Input, Upload, message} from 'antd'
 import {UserOutlined, LoadingOutlined, PlusOutlined} from '@ant-design/icons';
-import {Consumer} from '../context'
-import request from '../utils/axios'
+import {Consumer} from '../../context'
+import request from '../../utils/axios'
 
 const layout = {
   labelCol: {

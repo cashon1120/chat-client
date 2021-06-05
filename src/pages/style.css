@@ -9,7 +9,7 @@
   border-radius: 5px;
   padding: 25px 25px 15px 25px;
   margin: auto;
-  box-shadow: 0 0 15px rgba(0,0,0, .1);
+  box-shadow: 0 0 25px rgba(0,0,0, .15);
   margin-top: 30px;
   border: 1px solid #e1e1e1;
   transform: translate(-50%, -50%);
@@ -28,7 +28,7 @@
   background-color: #f8f8f8;
   padding-bottom: 15px;
   border: 1px solid #e1e1e1;
-  box-shadow: 0 0 15px rgba(0,0,0, .1);
+  box-shadow: 0 0 25px rgba(0,0,0, .15);
   border-radius: 5px;
   position: fixed;
   top: 45%;
@@ -102,6 +102,12 @@ ul.messageList li{
 .myMessage .message{
   background-color: #59e21c;
 } 
+.message-emoji{
+  background: none !important;
+}
+.message-emoji::before{
+  display: none !important;
+}
 .myMessage .message::after{
   display: none;
 }
@@ -161,4 +167,18 @@ ul.messageList li{
   outline: none;
   overflow: auto;
   border-radius: 5px;
+}
+
+/***工具***/
+.tools{
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.tools>div{
+  border: 1px solid #e1e1e1;
+  background-color: #fff;
+  width: 30px;
+  text-align: center;
+  height: 30px;
 }
